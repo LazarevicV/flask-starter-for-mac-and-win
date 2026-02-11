@@ -1,0 +1,209 @@
+#!/bin/bash
+
+# Script to generate a Flask project with virtual environment
+# Usage: ./generate-flask-project
+
+set -e  # Exit on error
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}=== Flask Project Generator ===${NC}\n"
+
+# Ask for project name
+read -p "Enter project name: " PROJECT_NAME
+
+if [ -z "$PROJECT_NAME" ]; then
+    echo -e "${YELLOW}Error: Project name cannot be empty!${NC}"
+    exit 1
+fi
+
+# Check if directory already exists
+if [ -d "$PROJECT_NAME" ]; then
+    echo -e "${YELLOW}Error: Directory '$PROJECT_NAME' already exists!${NC}"
+    exit 1
+fi
+
+echo -e "\n${GREEN}Creating Flask project: $PROJECT_NAME${NC}\n"
+
+# Create project directory
+mkdir -p "$PROJECT_NAME"
+cd "$PROJECT_NAME"
+
+# Create virtual environment
+echo -e "${BLUE}Creating virtual environment...${NC}"
+python3 -m venv venv
+
+# Activate virtual environment
+echo -e "${BLUE}Activating virtual environment...${NC}"
+source venv/bin/activate
+
+# Upgrade pip
+echo -e "${BLUE}Upgrading pip...${NC}"
+pip install --upgrade pip --quiet
+
+# Install Flask (latest version)
+echo -e "${BLUE}Installing Flask (latest version)...${NC}"
+pip install flask --quiet
+
+# Get Flask version
+FLASK_VERSION=$(python -c "import flask; print(flask.__version__)" 2>/dev/null || echo "latest")
+echo -e "${GREEN}Flask $FLASK_VERSION installed successfully!${NC}\n"
+
+# Create project structure
+echo -e "${BLUE}Creating project structure...${NC}"
+mkdir -p templates
+mkdir -p static/css
+mkdir -p static/js
+
+# Create main.py with starter code
+cat > main.py << 'EOF'
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+EOF
+
+# Create templates/index.html
+cat > templates/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Flask!</h1>
+        <p>Your Flask application is running successfully.</p>
+    </div>
+</body>
+</html>
+EOF
+
+# Create requirements.txt
+echo -e "${BLUE}Creating requirements.txt...${NC}"
+pip freeze > requirements.txt
+
+# Create .gitignore
+cat > .gitignore << 'EOF'
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Flask
+instance/
+.webassets-cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+EOF
+
+# Create README.md
+cat > README.md << EOF
+# $PROJECT_NAME
+
+Flask application project.
+
+## Setup
+
+1. Activate virtual environment:
+   \`\`\`bash
+   source venv/bin/activate
+   \`\`\`
+
+2. Install dependencies (if needed):
+   \`\`\`bash
+   pip install -r requirements.txt
+   \`\`\`
+
+3. Run the application:
+   \`\`\`bash
+   python main.py
+   \`\`\`
+
+4. Open your browser and navigate to: http://127.0.0.1:5000
+
+## Project Structure
+
+\`\`\`
+$PROJECT_NAME/
+├── main.py              # Main application file
+├── requirements.txt     # Python dependencies
+├── templates/           # HTML templates
+│   └── index.html
+├── static/              # Static files (CSS, JS, images)
+│   ├── css/
+│   └── js/
+└── venv/               # Virtual environment
+\`\`\`
+EOF
+
+echo -e "\n${GREEN}✓ Project created successfully!${NC}\n"
+echo -e "${BLUE}Project structure:${NC}"
+tree -L 2 -I 'venv|__pycache__|*.pyc' 2>/dev/null || find . -maxdepth 2 -not -path '*/venv/*' -not -path '*/\.*' | head -20
+
+echo -e "\n${GREEN}Next steps:${NC}"
+echo -e "1. cd $PROJECT_NAME"
+echo -e "2. source venv/bin/activate"
+echo -e "3. python main.py"
+echo -e "\n${BLUE}Your Flask app will be available at: http://127.0.0.1:5000${NC}\n"
