@@ -50,7 +50,7 @@ echo -e "${BLUE}Installing Flask (latest version)...${NC}"
 pip install flask --quiet
 
 # Get Flask version
-FLASK_VERSION=$(python -c "import flask; print(flask.__version__)" 2>/dev/null || echo "latest")
+FLASK_VERSION=$(python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>/dev/null || echo "latest")
 echo -e "${GREEN}Flask $FLASK_VERSION installed successfully!${NC}\n"
 
 # Create project structure

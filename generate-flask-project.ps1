@@ -44,7 +44,7 @@ try {
     Write-Host "Installing Flask (latest version)..." -ForegroundColor Cyan
     pip install flask -q
 
-    $flaskVersion = python -c "import flask; print(flask.__version__)" 2>$null
+    $flaskVersion = python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>$null
     if (-not $flaskVersion) { $flaskVersion = "latest" }
     Write-Host "Flask $flaskVersion installed successfully!" -ForegroundColor Green
     Write-Host ""
