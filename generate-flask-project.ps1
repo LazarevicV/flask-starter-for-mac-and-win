@@ -52,8 +52,6 @@ try {
     # Project structure
     Write-Host "Creating project structure..." -ForegroundColor Cyan
     New-Item -ItemType Directory -Path templates -Force | Out-Null
-    New-Item -ItemType Directory -Path "static\css" -Force | Out-Null
-    New-Item -ItemType Directory -Path "static\js" -Force | Out-Null
 
     # main.py
     @"
@@ -184,9 +182,6 @@ $projectName/
 ├── requirements.txt     # Python dependencies
 ├── templates/           # HTML templates
 │   └── index.html
-├── static/              # Static files (CSS, JS, images)
-│   ├── css/
-│   └── js/
 └── venv/                # Virtual environment
 ```
 "@ | Set-Content -Path README.md -Encoding UTF8
