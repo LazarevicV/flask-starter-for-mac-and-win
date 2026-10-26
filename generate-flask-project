@@ -70,12 +70,13 @@ import mysql.connector
 
 app = Flask(__name__)
 
-mydb = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='db'  # change this to the name of your database
-)
+# Uncomment to connect to MySQL (the MySQL server must be running and the database must exist)
+# mydb = mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='',
+#     database='db'  # change this to the name of your database
+# )
 
 @app.route('/')
 def index():
