@@ -41,8 +41,16 @@ PIP_ERROR = "Could not install packages (see the messages above). Check your int
 
 MAIN_PY = """\
 from flask import Flask, render_template
+import mysql.connector
 
 app = Flask(__name__)
+
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    database='db'  # change this to the name of your database
+)
 
 @app.route('/')
 def index():
@@ -218,6 +226,9 @@ def create_project(project_dir, project_name):
 
     say("Installing Flask (latest version)...", "cyan")
     run([str(venv_python), "-m", "pip", "install", "flask", "-q"], PIP_ERROR, cwd=project_dir)
+
+    say("Installing MySQL Connector (mysql-connector-python)...", "cyan")
+    run([str(venv_python), "-m", "pip", "install", "mysql-connector-python", "-q"], PIP_ERROR, cwd=project_dir)
 
     version = subprocess.run(
         [str(venv_python), "-c", "import importlib.metadata; print(importlib.metadata.version('flask'))"],

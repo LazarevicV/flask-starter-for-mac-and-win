@@ -49,6 +49,10 @@ pip install --upgrade pip --quiet
 echo -e "${BLUE}Installing Flask (latest version)...${NC}"
 pip install flask --quiet
 
+# Install MySQL Connector
+echo -e "${BLUE}Installing MySQL Connector (mysql-connector-python)...${NC}"
+pip install mysql-connector-python --quiet
+
 # Get Flask version
 FLASK_VERSION=$(python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>/dev/null || echo "latest")
 echo -e "${GREEN}Flask $FLASK_VERSION installed successfully!${NC}\n"
@@ -62,8 +66,16 @@ mkdir -p static/js
 # Create main.py with starter code
 cat > main.py << 'EOF'
 from flask import Flask, render_template
+import mysql.connector
 
 app = Flask(__name__)
+
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    database='db'  # change this to the name of your database
+)
 
 @app.route('/')
 def index():
