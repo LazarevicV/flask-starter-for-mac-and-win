@@ -7,6 +7,9 @@ rem = """
 :: part finds Python and runs the rest of this file with it ("python -x" skips
 :: the first line). PowerShell is not used, so execution policy does not apply.
 :: Keep CRLF line endings (see .gitattributes), cmd.exe needs them.
+::
+:: On success this window closes and the app starts in a new window with the
+:: venv activated. On errors this window stays open so the message can be read.
 
 setlocal
 title Flask Project Generator
@@ -26,8 +29,10 @@ if not defined PY (
 
 %PY% -x "%~f0"
 set "RC=%ERRORLEVEL%"
-echo.
-pause
+if not "%RC%"=="0" (
+    echo.
+    pause
+)
 exit /b %RC%
 """
 
@@ -259,15 +264,17 @@ def remove_unfinished(project_dir):
         say("The unfinished project folder was removed, so you can run this file again.", "yellow")
 
 
-def open_activated_terminal(project_dir):
-    """Open a new Command Prompt window in the project folder with the venv activated."""
+def start_server_window(project_dir):
+    """Open a new Command Prompt in the project folder, activate the venv and start the app."""
     if os.name != "nt":
         return False
-    # A separate window, so Ctrl+C (stopping Flask) never reaches this generator window.
+    # A new window, because this generator window closes when we are done. cmd /k keeps
+    # it open with the venv active after the server stops (Ctrl+C) or fails to start.
     # pushd also handles network paths, which cmd cannot use as its starting folder.
     command = (
         f'cmd.exe /k pushd "{project_dir}" && call venv\\Scripts\\activate.bat'
-        " && echo. && echo Virtual environment is active. Start the app with: python main.py"
+        " && echo Starting the Flask server. Stop it with Ctrl+C, start it again with: python main.py"
+        " && echo. && python main.py"
     )
     try:
         subprocess.Popen(command, creationflags=subprocess.CREATE_NEW_CONSOLE, cwd=os.environ.get("SystemRoot"))
@@ -338,17 +345,17 @@ def main():
     say(f"Location: {project_dir}")
 
     say()
+    if start_server_window(project_dir):
+        say("Starting the Flask server in a new window...", "green")
+        return 0
+
     say("Next steps:", "green")
-    if open_activated_terminal(project_dir):
-        say("A new window has opened in the project folder with the virtual environment activated.")
-        say("Start the app there with: python main.py")
-        say()
-        say("Later, from any terminal:")
     say(f'1. cd "{project_name}"' if " " in project_name else f"1. cd {project_name}")
     say(r"2. venv\Scripts\python main.py")
     say()
     say("Your Flask app will be available at: http://127.0.0.1:5000", "cyan")
-    return 0
+    # Non-zero exit keeps this window open (the batch part pauses) so the steps can be read
+    return 1
 
 
 if __name__ == "__main__":
