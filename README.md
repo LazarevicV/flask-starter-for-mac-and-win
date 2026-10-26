@@ -44,23 +44,23 @@ Restart PowerShell, then use `generate-flask-project` from anywhere.
 
 ### Windows
 
-1. **Run the script** (from this folder, or anywhere after installing):
-   ```powershell
-   .\generate-flask-project.ps1
-   ```
-   If execution is blocked, run:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\generate-flask-project.ps1
-   ```
+1. **Download `generate-flask-project.cmd` and double-click it** (or run it from a terminal).
+   It does not use PowerShell, so a disabled execution policy does not block it.
+   If Windows shows "Windows protected your PC", click **More info → Run anyway**.
 
-2. **Enter project name** when prompted.
+2. **Enter project name** when prompted. The project is created next to the `.cmd` file
+   (or in the current folder when run from a terminal).
 
-3. **Start the new project**:
-   ```powershell
+3. **Start the new project** (works in Command Prompt and PowerShell, no activation needed):
+   ```
    cd <project-name>
-   .\venv\Scripts\Activate.ps1
-   python main.py
+   venv\Scripts\python main.py
    ```
+
+Alternative (PowerShell script, may be blocked by execution policy):
+```powershell
+powershell -ExecutionPolicy Bypass -File .\generate-flask-project.ps1
+```
 
 ### Then
 
@@ -70,4 +70,4 @@ Restart PowerShell, then use `generate-flask-project` from anywhere.
 
 - Python 3 installed
 - **macOS/Linux:** bash (default)
-- **Windows:** PowerShell 5+ (built into Windows)
+- **Windows:** Python 3.8+ (found via the `py` launcher or `python` on PATH)

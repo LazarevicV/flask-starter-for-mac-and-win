@@ -1,0 +1,3 @@
+# cmd.exe needs CRLF line endings. -text stores the file byte-for-byte, so a raw
+# download from GitHub also gets CRLF (eol=crlf would store LF in the repo).
+*.cmd -text
