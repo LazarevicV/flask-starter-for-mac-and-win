@@ -259,6 +259,23 @@ def remove_unfinished(project_dir):
         say("The unfinished project folder was removed, so you can run this file again.", "yellow")
 
 
+def open_activated_terminal(project_dir):
+    """Open a new Command Prompt window in the project folder with the venv activated."""
+    if os.name != "nt":
+        return False
+    # A separate window, so Ctrl+C (stopping Flask) never reaches this generator window.
+    # pushd also handles network paths, which cmd cannot use as its starting folder.
+    command = (
+        f'cmd.exe /k pushd "{project_dir}" && call venv\\Scripts\\activate.bat'
+        " && echo. && echo Virtual environment is active. Start the app with: python main.py"
+    )
+    try:
+        subprocess.Popen(command, creationflags=subprocess.CREATE_NEW_CONSOLE, cwd=os.environ.get("SystemRoot"))
+    except OSError:
+        return False
+    return True
+
+
 def main():
     say("=== Flask Project Generator ===", "cyan")
     say()
@@ -322,6 +339,11 @@ def main():
 
     say()
     say("Next steps:", "green")
+    if open_activated_terminal(project_dir):
+        say("A new window has opened in the project folder with the virtual environment activated.")
+        say("Start the app there with: python main.py")
+        say()
+        say("Later, from any terminal:")
     say(f'1. cd "{project_name}"' if " " in project_name else f"1. cd {project_name}")
     say(r"2. venv\Scripts\python main.py")
     say()

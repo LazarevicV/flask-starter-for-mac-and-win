@@ -53,7 +53,10 @@ Restart PowerShell, then use `generate-flask-project` from anywhere.
 2. **Enter project name** when prompted. The project is created next to the `.cmd` file
    (or in the current folder when run from a terminal).
 
-3. **Start the new project** (works in Command Prompt and PowerShell, no activation needed):
+3. **Start the new project**: when the project is created, a new Command Prompt window opens
+   in the project folder with the virtual environment already activated. Run `python main.py` there.
+
+   Later, from any terminal (Command Prompt or PowerShell, no activation needed):
    ```
    cd <project-name>
    venv\Scripts\python main.py
