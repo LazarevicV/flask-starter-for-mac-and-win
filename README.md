@@ -2,7 +2,7 @@
 
 Script that creates a new Flask project with virtual environment, Flask, MySQL Connector (`mysql-connector-python`), `main.py`, and a basic `index.html` template.
 
-The generated `main.py` connects to MySQL on startup (`localhost`, user `root`, empty password, database `db`). Change these values in `main.py` to match your database before running the app.
+The generated `main.py` contains a commented-out MySQL connection (`localhost`, user `root`, empty password, database `db`). To use a database, uncomment it in `main.py` and change these values to match your database.
 
 ## Installation (optional)
 
@@ -53,8 +53,9 @@ Restart PowerShell, then use `generate-flask-project` from anywhere.
 2. **Enter project name** when prompted. The project is created next to the `.cmd` file
    (or in the current folder when run from a terminal).
 
-3. **Start the new project**: when the project is created, a new Command Prompt window opens
-   in the project folder with the virtual environment already activated. Run `python main.py` there.
+3. **The app starts by itself**: when the project is created, this window closes and a new
+   Command Prompt window opens in the project folder with the virtual environment activated
+   and the Flask app running. Stop it with Ctrl+C, start it again there with `python main.py`.
 
    Later, from any terminal (Command Prompt or PowerShell, no activation needed):
    ```
@@ -76,4 +77,4 @@ powershell -ExecutionPolicy Bypass -File .\generate-flask-project.ps1
 - Python 3 installed
 - **macOS/Linux:** bash (default)
 - **Windows:** Python 3.8+ (found via the `py` launcher or `python` on PATH)
-- A running MySQL server with the database set in `main.py` (needed to start the generated app)
+- A running MySQL server with the database set in `main.py` (only after uncommenting the connection)
