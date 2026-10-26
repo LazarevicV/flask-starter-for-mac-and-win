@@ -44,6 +44,9 @@ try {
     Write-Host "Installing Flask (latest version)..." -ForegroundColor Cyan
     pip install flask -q
 
+    Write-Host "Installing MySQL Connector (mysql-connector-python)..." -ForegroundColor Cyan
+    pip install mysql-connector-python -q
+
     $flaskVersion = python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>$null
     if (-not $flaskVersion) { $flaskVersion = "latest" }
     Write-Host "Flask $flaskVersion installed successfully!" -ForegroundColor Green
@@ -56,8 +59,16 @@ try {
     # main.py
     @"
 from flask import Flask, render_template
+import mysql.connector
 
 app = Flask(__name__)
+
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    database='db'  # change this to the name of your database
+)
 
 @app.route('/')
 def index():
