@@ -2,7 +2,7 @@
 
 Script that creates a new Flask project with virtual environment, Flask, MySQL Connector (`mysql-connector-python`), Flask-CORS (`flask-cors`), `main.py`, and a basic `index.html` template.
 
-The generated `main.py` imports `Flask`, `render_template`, `request`, `session`, `redirect`, `url_for` and `CORS`, and sets `app.config["SECRET_KEY"] = "WSIT - 2026/27"` so sessions work. Change the key for anything that is not a class exercise.
+The generated `main.py` imports `Flask`, `render_template`, `request`, `session`, `redirect`, `url_for` and `CORS`, sets `app.config["SECRET_KEY"] = "WSIT - 2026/27"` so sessions work, and enables CORS for all routes with `CORS(app)`. Change the key for anything that is not a class exercise.
 
 It also contains a commented-out MySQL connection (`localhost`, user `root`, empty password, database `db`). To use a database, uncomment it in `main.py` and change these values to match your database.
 

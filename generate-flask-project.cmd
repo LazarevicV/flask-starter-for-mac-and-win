@@ -51,6 +51,7 @@ import mysql.connector
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "WSIT - 2026/27"
+CORS(app)
 
 # Uncomment to connect to MySQL (the MySQL server must be running and the database must exist)
 # mydb = mysql.connector.connect(
