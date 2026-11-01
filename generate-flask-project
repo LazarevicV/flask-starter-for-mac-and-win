@@ -53,6 +53,10 @@ pip install flask --quiet
 echo -e "${BLUE}Installing MySQL Connector (mysql-connector-python)...${NC}"
 pip install mysql-connector-python --quiet
 
+# Install Flask-CORS
+echo -e "${BLUE}Installing Flask-CORS (flask-cors)...${NC}"
+pip install flask-cors --quiet
+
 # Get Flask version
 FLASK_VERSION=$(python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>/dev/null || echo "latest")
 echo -e "${GREEN}Flask $FLASK_VERSION installed successfully!${NC}\n"
@@ -65,10 +69,12 @@ mkdir -p static/js
 
 # Create main.py with starter code
 cat > main.py << 'EOF'
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "WSIT - 2026/27"
 
 # Uncomment to connect to MySQL (the MySQL server must be running and the database must exist)
 # mydb = mysql.connector.connect(
