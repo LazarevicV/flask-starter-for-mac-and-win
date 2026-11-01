@@ -45,10 +45,13 @@ from pathlib import Path
 PIP_ERROR = "Could not install packages (see the messages above). Check your internet connection."
 
 MAIN_PY = """\
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "WSIT - 2026/27"
+CORS(app)
 
 # Uncomment to connect to MySQL (the MySQL server must be running and the database must exist)
 # mydb = mysql.connector.connect(
@@ -235,6 +238,9 @@ def create_project(project_dir, project_name):
 
     say("Installing MySQL Connector (mysql-connector-python)...", "cyan")
     run([str(venv_python), "-m", "pip", "install", "mysql-connector-python", "-q"], PIP_ERROR, cwd=project_dir)
+
+    say("Installing Flask-CORS (flask-cors)...", "cyan")
+    run([str(venv_python), "-m", "pip", "install", "flask-cors", "-q"], PIP_ERROR, cwd=project_dir)
 
     version = subprocess.run(
         [str(venv_python), "-c", "import importlib.metadata; print(importlib.metadata.version('flask'))"],

@@ -47,6 +47,9 @@ try {
     Write-Host "Installing MySQL Connector (mysql-connector-python)..." -ForegroundColor Cyan
     pip install mysql-connector-python -q
 
+    Write-Host "Installing Flask-CORS (flask-cors)..." -ForegroundColor Cyan
+    pip install flask-cors -q
+
     $flaskVersion = python -c "import importlib.metadata; print(importlib.metadata.version('flask'))" 2>$null
     if (-not $flaskVersion) { $flaskVersion = "latest" }
     Write-Host "Flask $flaskVersion installed successfully!" -ForegroundColor Green
@@ -58,10 +61,13 @@ try {
 
     # main.py
     @"
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "WSIT - 2026/27"
+CORS(app)
 
 # Uncomment to connect to MySQL (the MySQL server must be running and the database must exist)
 # mydb = mysql.connector.connect(
